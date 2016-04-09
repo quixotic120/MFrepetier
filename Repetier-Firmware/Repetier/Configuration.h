@@ -44,6 +44,17 @@
 // ################## EDIT THESE SETTINGS MANUALLY ################
 // ################ END MANUAL SETTINGS ##########################
 
+#undef FAN_BOARD_PIN
+#define FAN_BOARD_PIN -1
+#define BOARD_FAN_SPEED 255
+#define FAN_THERMO_PIN ORIG_FAN2_PIN
+#define FAN_THERMO_MIN_PWM 128
+#define FAN_THERMO_MAX_PWM 255
+#define FAN_THERMO_MIN_TEMP 45
+#define FAN_THERMO_MAX_TEMP 60
+#define FAN_THERMO_THERMISTOR_PIN TEMP_2_PIN
+#define FAN_THERMO_THERMISTOR_TYPE 5
+
 //#define EXTERNALSERIAL  use Arduino serial library instead of build in. Requires more ram, has only 63 byte input buffer.
 // Uncomment the following line if you are using Arduino compatible firmware made for Arduino version earlier then 1.0
 // If it is incompatible you will get compiler errors about write functions not being compatible!
@@ -71,7 +82,7 @@
 #define EXT0_Z_OFFSET 0
 #define EXT0_STEPS_PER_MM 370
 #define EXT0_TEMPSENSOR_TYPE 5
-#define EXT0_TEMPSENSOR_PIN THERMOCOUPLE_1_PIN
+#define EXT0_TEMPSENSOR_PIN TEMP_1_PIN
 #define EXT0_HEATER_PIN HEATER_0_PIN
 #define EXT0_STEP_PIN ORIG_E0_STEP_PIN
 #define EXT0_DIR_PIN ORIG_E0_DIR_PIN
@@ -231,7 +242,7 @@
 #define HEATED_BED_MAX_TEMP 120
 #define SKIP_M190_IF_WITHIN 3
 #define HEATED_BED_SENSOR_TYPE 5
-#define HEATED_BED_SENSOR_PIN THERMOCOUPLE_0_PIN
+#define HEATED_BED_SENSOR_PIN TEMP_0_PIN
 #define HEATED_BED_HEATER_PIN HEATER_1_PIN
 #define HEATED_BED_SET_INTERVAL 5000
 #define HEATED_BED_HEAT_MANAGER 1
