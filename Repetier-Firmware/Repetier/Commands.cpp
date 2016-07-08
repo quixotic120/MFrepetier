@@ -288,16 +288,16 @@ void motorCurrentControlInit() { //Initialize Digipot Motor Current
 #if DIGIPOTSS_PIN && DIGIPOTSS_PIN > -1
     HAL::spiInit(0); //SPI.begin();
     SET_OUTPUT(DIGIPOTSS_PIN);
-#ifdef MOTOR_CURRENT_PERCENT
-    const float digipot_motor_current[] = MOTOR_CURRENT_PERCENT;
+#ifdef _PERCENT
+    const float digipot_[] = _PERCENT;
     for(int i = 0; i <= 4; i++)
-        //digitalPotWrite(digipot_ch[i], digipot_motor_current[i]);
-        setMotorCurrentPercent(i,digipot_motor_current[i]);
+        //digitalPotWrite(digipot_ch[i], digipot_[i]);
+        setMotorCurrentPercent(i,digipot_[i]);
 #else
-    const uint8_t digipot_motor_current[] = MOTOR_CURRENT;
+    const uint8_t digipot_[] = ;
     for(int i = 0; i <= 4; i++)
-        //digitalPotWrite(digipot_ch[i], digipot_motor_current[i]);
-        setMotorCurrent(i,digipot_motor_current[i]);
+        //digitalPotWrite(digipot_ch[i], digipot_[i]);
+        setMotorCurrent(i,digipot_[i]);
 #endif
 #endif
 }
@@ -355,13 +355,13 @@ void setMotorCurrentPercent( uint8_t channel, float level) {
 
 void motorCurrentControlInit() { //Initialize LTC2600 Motor Current
     uint8_t i;
-#ifdef MOTOR_CURRENT_PERCENT
-    const float digipot_motor_current[] = MOTOR_CURRENT_PERCENT;
+#ifdef _PERCENT
+    const float digipot_[] = _PERCENT;
     for(int i = 0; i < LTC2600_NUM_CHANNELS; i++)
-        //digitalPotWrite(digipot_ch[i], digipot_motor_current[i]);
-        setMotorCurrentPercent(i,digipot_motor_current[i]);
+        //digitalPotWrite(digipot_ch[i], digipot_[i]);
+        setMotorCurrentPercent(i,digipot_[i]);
 #else
-    const unsigned int ltc_current[] =  MOTOR_CURRENT;
+    const unsigned int ltc_current[] =  ;
     for(i = 0; i < LTC2600_NUM_CHANNELS; i++) {
         setMotorCurrent(i, ltc_current[i] );
     }
@@ -450,14 +450,14 @@ void motorCurrentControlInit() { //Initialize Motor Current
     WRITE(DAC1_SYNC, HIGH);
 #endif
 
-#ifdef MOTOR_CURRENT_PERCENT
-    const float digipot_motor_current[] = MOTOR_CURRENT_PERCENT;
+#ifdef _PERCENT
+    const float digipot_[] = _PERCENT;
     for(int i = 0; i < NUM_EXTRUDER+3; i++)
-        setMotorCurrentPercent(i,digipot_motor_current[i]);
+        setMotorCurrentPercent(i,digipot_[i]);
 #else
-    const uint8_t digipot_motor_current[] = MOTOR_CURRENT;
+    const uint8_t digipot_[] = ;
     for(uint8_t i = 0; i < NUM_EXTRUDER+3; i++)
-        setMotorCurrent(i,digipot_motor_current[i]);
+        setMotorCurrent(i,digipot_[i]);
 #endif
 }
 #endif
@@ -467,7 +467,7 @@ void motorCurrentControlInit() { //Initialize Motor Current
 uint8_t   _intVref[]     = {MCP4728_VREF, MCP4728_VREF, MCP4728_VREF, MCP4728_VREF};
 uint8_t   _gain[]        = {MCP4728_GAIN, MCP4728_GAIN, MCP4728_GAIN, MCP4728_GAIN};
 uint8_t   _powerDown[]   = {0,0,0,0};
-int16_t   dac_motor_current[] =  {0,0,0,0};
+int16_t   dac_[] =  {0,0,0,0};
 
 uint8_t   _intVrefEp[]   = {MCP4728_VREF, MCP4728_VREF, MCP4728_VREF, MCP4728_VREF};
 uint8_t   _gainEp[]      = {MCP4728_GAIN, MCP4728_GAIN, MCP4728_GAIN, MCP4728_GAIN};
@@ -502,7 +502,7 @@ void dacReadStatus() {
             _intVref[channel] = (hiByte & 0B10000000) >> 7;
             _gain[channel] = (hiByte & 0B00010000) >> 4;
             _powerDown[channel] = (hiByte & 0B01100000) >> 5;
-            dac_motor_current[channel] = word((hiByte & 0B00001111), loByte);
+            dac_[channel] = word((hiByte & 0B00001111), loByte);
         }
     }
 
@@ -516,7 +516,7 @@ void dacAnalogUpdate(bool saveEEPROM = false) {
     if (saveEEPROM) HAL::i2cWrite(dac_write_cmd);
 
     for (int i = 0; i < MCP4728_NUM_CHANNELS; i++) {
-        uint16_t level = dac_motor_current[i];
+        uint16_t level = dac_[i];
 
         uint8_t highbyte = ( _intVref[i] << 7 | _gain[i] << 4 | (uint8_t)((level) >> 8) );
         uint8_t lowbyte =  ( (uint8_t) ((level) & 0xff) );
@@ -556,13 +556,13 @@ void dacPrintValues() {
     dacPrintSet(_valuesEp, dacChannelPrefixes); // Once for the EEPROM set
 
     Com::printFLN(Com::tMCPCurrentSettings);
-    dacPrintSet(dac_motor_current, dacChannelPrefixes); // And another for the RUNTIME set
+    dacPrintSet(dac_, dacChannelPrefixes); // And another for the RUNTIME set
 }
 
 void setMotorCurrent( uint8_t xyz_channel, uint16_t level ) {
     if (xyz_channel >= MCP4728_NUM_CHANNELS) return;
     uint8_t stepper_channel = dac_stepper_channel[xyz_channel];
-    dac_motor_current[stepper_channel] = level < MCP4728_VOUT_MAX ? level : MCP4728_VOUT_MAX;
+    dac_[stepper_channel] = level < MCP4728_VOUT_MAX ? level : MCP4728_VOUT_MAX;
     dacAnalogUpdate();
 }
 
